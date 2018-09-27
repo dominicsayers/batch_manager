@@ -39,7 +39,7 @@ module BatchManager
     end
 
     def user_name
-      @user_name ||= options[:user_name] || ENV["USER"]
+      @user_name ||= options[:user_name] || ENV['USER']
     end
 
     def report_directory
@@ -56,7 +56,7 @@ module BatchManager
     end
 
     def console(text)
-      puts text # rubocop:disable Rails/Output
+      puts text
     end
 
     def tee(text, severity = Logger::INFO)
@@ -65,7 +65,7 @@ module BatchManager
     end
 
     def really_do_it?
-      @really_do_it ||= ENV["REALLY_DO_IT"] == "true"
+      @really_do_it ||= ENV['REALLY_DO_IT'] == 'true'
     end
 
     def handle(exception)
@@ -84,7 +84,7 @@ module BatchManager
 
     def logger
       @logger ||= begin
-        new_logger = Logger.new(File.join(report_directory, "report.log"))
+        new_logger = Logger.new(File.join(report_directory, 'report.log'))
         new_logger.formatter = Logger::Formatter.new
         new_logger.level = log_level
         new_logger
@@ -92,15 +92,15 @@ module BatchManager
     end
 
     def log_level
-      options[:log_level] || ENV.fetch("LOG_LEVEL", Logger::INFO)
+      options[:log_level] || ENV.fetch('LOG_LEVEL', Logger::INFO)
     end
 
     def default_report_directory
-      "#{Time.zone.now.strftime('%F_%H-%M-%S')}_#{name.demodulize.underscore.gsub(/[[:space:]]+/, "_")}"
+      "#{Time.zone.now.strftime('%F_%H-%M-%S')}_#{name.demodulize.underscore.gsub(/[[:space:]]+/, '_')}"
     end
 
     def report_root
-      Rails.configuration.live_environment ? files_root.join("tmp", user_folder, "openc", "jobs") : files_root
+      Rails.configuration.live_environment ? files_root.join('tmp', user_folder, 'openc', 'jobs') : files_root
     end
 
     def user_folder

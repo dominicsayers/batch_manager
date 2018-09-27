@@ -8,7 +8,7 @@ module BatchManager
       @counter = 0
       @previous_position = 0
       @previous_time = Time.current
-      @delim = ""
+      @delim = ''
     end
 
     def start_time

@@ -60,7 +60,7 @@ module BatchManager
 
     def git_commit
       commit_hash = `git log -1 --format="%H" 2>&1`.split("\n").first.strip
-      commit_hash = "not a git repository" if commit_hash =~ /Not a git repository/
+      commit_hash = 'not a git repository' if commit_hash =~ /Not a git repository/
       commit_hash
     end
 
@@ -69,7 +69,7 @@ module BatchManager
     end
 
     def readme_file
-      @readme_file ||= files["README_#{name.gsub("::", "_")}.md"]
+      @readme_file ||= files["README_#{name.gsub('::', '_')}.md"]
     end
 
     def reset_job

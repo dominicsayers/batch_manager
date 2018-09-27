@@ -24,6 +24,7 @@ module BatchManager
 
     def show
       return unless show?
+
       position = current_position
       return unless (position % progress_each).zero?
       return if position == previous_position
@@ -47,7 +48,7 @@ module BatchManager
     def expected=(value)
       @expected = value || options[:expected]
       @percent = @expected.present? && !@expected.zero?
-      @rate_unit = @percent ? "min" : "second"
+      @rate_unit = @percent ? 'min' : 'second'
       @progress_each = nil
 
       job.tee "Processing #{nicenumber(expected)} #{name} items"
@@ -59,11 +60,11 @@ module BatchManager
     end
 
     def nicenumber(number)
-      number_with_delimiter(number.to_i, :delimiter => ",")
+      number_with_delimiter(number.to_i, delimiter: ',')
     end
 
     def niceposition(number)
-      percent? ? format("%3d%", number) : nicenumber(number)
+      percent? ? format('%3d%', number) : nicenumber(number)
     end
 
     def nicefloat(number)
@@ -92,6 +93,7 @@ module BatchManager
 
     def eta(position, elapsed_time)
       return unless percent?
+
       remaining_percent = 100 - position
       remaining_time = elapsed_time * remaining_percent
       eta = Time.current + remaining_time.seconds

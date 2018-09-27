@@ -7,9 +7,10 @@ module BatchManager
 
     def open(file_name)
       return open_files[file_name] if open_files.key?(file_name)
+
       path = Pathname.new File.join(report_directory, file_name)
       FileUtils.mkdir_p path.parent
-      file = File.new(path, "w")
+      file = File.new(path, 'w')
       open_files[file_name] = file
       file
     end
