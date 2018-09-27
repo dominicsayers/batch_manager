@@ -1,3 +1,9 @@
+require_relative 'files'
+require_relative 'item'
+require_relative 'progress'
+require_relative 'reporter'
+require_relative 'state'
+
 module BatchManager
   class Job
     attr_reader :name, :options
