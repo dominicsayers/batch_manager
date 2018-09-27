@@ -90,7 +90,7 @@ module BatchManager
     end
 
     def default_report_directory
-      "#{Time.zone.now.strftime('%F_%H-%M-%S')}_#{name.demodulize.underscore}"
+      "#{Time.zone.now.strftime('%F_%H-%M-%S')}_#{name.demodulize.underscore.gsub(/[[:space:]]+/, "_")}"
     end
 
     def report_root
