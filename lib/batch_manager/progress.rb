@@ -41,7 +41,6 @@ module BatchManager
 
     def reset
       state = State.new
-      console "Starting at #{state.start_time}" if show?
       @state = state
     end
 
