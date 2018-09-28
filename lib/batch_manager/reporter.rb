@@ -18,8 +18,8 @@ module BatchManager
     def finish
       files.close
       progress.finish
-      job.tee "#{name} finished at #{finish_time}"
-      job.tee "#{progress.nicenumber(counter)} #{name} records processed in #{progress.nicefloat(elapsed_time)} seconds"
+      announce_finish_time
+      announce_finish_rate
       job.console "Results for #{name} are in #{job.report_directory}"
       nil # tidy console output
     end
@@ -74,6 +74,15 @@ module BatchManager
 
     def reset_job
       @state = progress.reset
+    end
+
+    def announce_finish_time
+      job.tee "#{name} finished at #{finish_time}"
+    end
+
+    def announce_finish_rate
+      job.tee "#{progress.nicenumber(counter)} #{name} records processed " \
+        "in #{progress.nicefloat(elapsed_time)} seconds"
     end
   end
 end
