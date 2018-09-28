@@ -27,7 +27,7 @@ module BatchManager
     end
 
     def process_item(&block)
-      item.process &block
+      item.process(&block)
     end
 
     def item
