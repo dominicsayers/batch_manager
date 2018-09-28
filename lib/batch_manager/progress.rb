@@ -29,15 +29,7 @@ module BatchManager
       return unless (position % progress_each).zero?
       return if position == previous_position
 
-      current_time = Time.current
-      elapsed_time = current_time - previous_time
-
-      console "#{name}\t#{niceposition(position)} " \
-            "(elapsed time: #{nicefloat(elapsed_time)} seconds, " \
-            "rate: #{niceposition(rate(elapsed_time))}/#{@rate_unit}#{eta(position, elapsed_time)})"
-
-      state.previous_position = position
-      state.previous_time = current_time
+      show_position(position, Time.current)
     end
 
     def reset
@@ -77,6 +69,17 @@ module BatchManager
 
     delegate :options, :name, :console, to: :job
     delegate :counter, :previous_position, :previous_time, to: :state
+
+    def show_position(position, current_time)
+      elapsed_time = current_time - previous_time
+
+      console "#{name}\t#{niceposition(position)} " \
+            "(elapsed time: #{nicefloat(elapsed_time)} seconds, " \
+            "rate: #{niceposition(rate(elapsed_time))}/#{@rate_unit}#{eta(position, elapsed_time)})"
+
+      state.previous_position = position
+      state.previous_time = current_time
+    end
 
     def current_position
       percent? ? 100 * counter / expected : counter
