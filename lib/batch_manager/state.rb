@@ -1,5 +1,5 @@
 module BatchManager
-  # Holds all the migration reporter's state during the migration
+  # Holds all the job reporter's state during the job
   # we can simply reset this if we need to restart
   class State
     attr_accessor :counter, :previous_position, :previous_time, :delim

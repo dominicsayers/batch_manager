@@ -5,8 +5,8 @@ module BatchManager
 
     attr_reader :state, :expected, :progress_each
 
-    def initialize(migration)
-      @migration = migration
+    def initialize(job)
+      @job = job
       self.expected = nil
       self.progress_each = nil
       reset
@@ -51,7 +51,7 @@ module BatchManager
       @rate_unit = @percent ? "min" : "second"
       @progress_each = nil
 
-      migration.tee "Processing #{nicenumber(expected)} #{name} items"
+      job.tee "Processing #{nicenumber(expected)} #{name} items"
     end
 
     def progress_each=(value)
@@ -73,9 +73,9 @@ module BatchManager
 
     private
 
-    attr_reader :migration
+    attr_reader :job
 
-    delegate :options, :name, :console, to: :migration
+    delegate :options, :name, :console, to: :job
     delegate :counter, :previous_position, :previous_time, to: :state
 
     def current_position

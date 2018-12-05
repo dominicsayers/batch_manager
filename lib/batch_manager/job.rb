@@ -1,5 +1,5 @@
 module BatchManager
-  class Migration
+  class Job
     attr_reader :name, :options
 
     delegate :increment_counter, to: :reporter
@@ -58,8 +58,8 @@ module BatchManager
       console text
     end
 
-    def really_migrate?
-      @really_migrate ||= ENV["MIGRATE_DATA"] == "true"
+    def really_do_it?
+      @really_do_it ||= ENV["REALLY_DO_IT"] == "true"
     end
 
     def handle(exception)
@@ -94,7 +94,7 @@ module BatchManager
     end
 
     def report_root
-      Rails.configuration.live_environment ? files_root.join("tmp", user_folder, "openc", "migrations") : files_root
+      Rails.configuration.live_environment ? files_root.join("tmp", user_folder, "openc", "jobs") : files_root
     end
 
     def user_folder
@@ -109,9 +109,9 @@ module BatchManager
       return true if user_name.present?
 
       raise <<-MESSAGE.strip_heredoc
-        You need to set user_name to whoever is performing the migration. This
+        You need to set user_name to whoever is performing the job. This
         can be done by setting an environment variable USER to the correct
-        value or at any point by calling `migration.user_name = "Joe Bloggs"`
+        value or at any point by calling `job.user_name = "Joe Bloggs"`
       MESSAGE
     end
   end

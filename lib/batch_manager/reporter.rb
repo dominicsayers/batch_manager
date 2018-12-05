@@ -1,15 +1,15 @@
 module BatchManager
-  # Report on a data migration
+  # Report on a data job
   class Reporter
-    attr_reader :migration, :state
+    attr_reader :job, :state
 
-    def initialize(migration)
-      @migration = migration
+    def initialize(job)
+      @job = job
     end
 
     def start
-      reset_migration
-      migration.tee "#{name} beginning at #{start_time}"
+      reset_job
+      job.tee "#{name} beginning at #{start_time}"
       readme_file.puts readme
       readme_file.flush
       start_time
@@ -18,9 +18,9 @@ module BatchManager
     def finish
       files.close
       progress.finish
-      migration.tee "#{name} finished at #{finish_time}"
-      migration.tee "#{progress.nicenumber(counter)} #{name} records processed in #{progress.nicefloat(elapsed_time)} seconds"
-      migration.console "Results for #{name} are in #{migration.report_directory}"
+      job.tee "#{name} finished at #{finish_time}"
+      job.tee "#{progress.nicenumber(counter)} #{name} records processed in #{progress.nicefloat(elapsed_time)} seconds"
+      job.console "Results for #{name} are in #{job.report_directory}"
       nil # tidy console output
     end
 
@@ -36,18 +36,18 @@ module BatchManager
 
     private
 
-    delegate :progress, :files, :name, to: :migration
+    delegate :progress, :files, :name, to: :job
     delegate :start_time, :finish_time, :elapsed_time, :counter, to: :state
 
     def readme
       text = <<-TEXT.strip_heredoc
-        # Data migration
+        # Data job
 
         ## #{name}
 
-        * Run as: `#{migration.user_name}`
+        * Run as: `#{job.user_name}`
         * Git commit: `#{git_commit}`
-        * Report directory: `#{migration.report_directory}`
+        * Report directory: `#{job.report_directory}`
 
         ## Environment variables
 
@@ -72,7 +72,7 @@ module BatchManager
       @readme_file ||= files["README_#{name.gsub("::", "_")}.md"]
     end
 
-    def reset_migration
+    def reset_job
       @state = progress.reset
     end
   end

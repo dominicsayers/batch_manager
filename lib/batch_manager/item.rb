@@ -1,14 +1,14 @@
 module BatchManager
   class Item
-    def initialize(migration)
-      @migration = migration
+    def initialize(job)
+      @job = job
     end
 
     def process
       yield
-      @migration.increment_counter
+      @job.increment_counter
     rescue StandardError => exception
-      @migration.handle exception
+      @job.handle exception
       raise
     end
   end

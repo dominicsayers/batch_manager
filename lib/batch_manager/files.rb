@@ -1,8 +1,8 @@
 module BatchManager
   # Manage reporting, logging and other output files
   class Files
-    def initialize(migration)
-      @migration = migration
+    def initialize(job)
+      @job = job
     end
 
     def open(file_name)
@@ -26,7 +26,7 @@ module BatchManager
     private
 
     def report_directory
-      @report_directory ||= @migration.report_directory
+      @report_directory ||= @job.report_directory
     end
 
     def open_files
