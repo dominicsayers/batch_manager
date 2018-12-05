@@ -100,7 +100,7 @@ module BatchManager
     end
 
     def report_root
-      Rails.configuration.live_environment ? files_root.join('tmp', user_folder, 'openc', 'jobs') : files_root
+      Rails.configuration.production? ? files_root.join('tmp', user_folder, 'jobs') : files_root
     end
 
     def user_folder
@@ -108,7 +108,7 @@ module BatchManager
     end
 
     def files_root
-      Rails.configuration.files_root
+      Dir.pwd
     end
 
     def user_name?
