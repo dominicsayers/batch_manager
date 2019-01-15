@@ -56,7 +56,7 @@ module BatchManager
     end
 
     def niceposition(number)
-      percent? ? format('%3d%', number) : nicenumber(number)
+      percent? ? format('%3d%%', number) : nicenumber(number)
     end
 
     def nicefloat(number)
