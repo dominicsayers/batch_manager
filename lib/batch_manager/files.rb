@@ -17,6 +17,10 @@ module BatchManager
 
     alias [] open
 
+    def flush
+      open_files.values.each(&:flush)
+    end
+
     def close
       open_files.delete_if do |_, open_file|
         open_file.close

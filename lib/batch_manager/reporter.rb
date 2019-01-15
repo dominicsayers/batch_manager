@@ -16,11 +16,11 @@ module BatchManager
     end
 
     def finish
-      files.close
       progress.finish
       announce_finish_time
       announce_finish_rate
       job.console "Results for #{name} are in #{job.report_directory}"
+      files.flush
       nil # tidy console output
     end
 
