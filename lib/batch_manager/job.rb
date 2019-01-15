@@ -44,7 +44,7 @@ module BatchManager
 
     def report_directory
       @report_directory ||= begin
-        directory = File.join(report_root, options[:report_directory] || default_report_directory)
+        directory = File.join(options[:report_root] || report_root, default_report_directory)
         FileUtils.mkdir_p directory
         console "Results for #{name} are in #{directory}"
         directory
@@ -72,14 +72,14 @@ module BatchManager
       logger.error "#{exception.class}\n#{exception.message}\n  from #{exception.backtrace.join("\n  from ")}"
     end
 
+    def progress
+      @progress ||= Progress.new(self)
+    end
+
     private
 
     def reporter
       @reporter ||= Reporter.new(self)
-    end
-
-    def progress
-      @progress ||= Progress.new(self)
     end
 
     def logger
@@ -100,7 +100,7 @@ module BatchManager
     end
 
     def report_root
-      Rails.configuration.production? ? files_root.join('tmp', user_folder, 'jobs') : files_root
+      Rails.env.production? ? files_root.join('tmp', user_folder, 'jobs') : files_root
     end
 
     def user_folder
@@ -108,7 +108,7 @@ module BatchManager
     end
 
     def files_root
-      Dir.pwd
+      Pathname.new(Dir.pwd)
     end
 
     def user_name?
