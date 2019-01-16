@@ -68,21 +68,32 @@ module BatchManager
     attr_reader :job
 
     delegate :options, :name, :console, to: :job
-    delegate :counter, :previous_position, :previous_time, to: :state
+    delegate :counter, :previous_position, :previous_time, :stats, to: :state
 
     def show_position(position, current_time)
       elapsed_time = current_time - previous_time
 
-      console "#{name}\t#{niceposition(position)} " \
-            "(elapsed time: #{nicefloat(elapsed_time)} seconds, " \
-            "rate: #{niceposition(rate(elapsed_time))}/#{@rate_unit}#{eta(position, elapsed_time)})"
+      max_elapsed_time = stats[:max_elapsed_time] || 0
+      stats[:max_elapsed_time] = elapsed_time if elapsed_time > max_elapsed_time
+
+      frequency = (stats[:frequency] || 0) + 1
+      total_elapsed_time = (stats[:total_elapsed_time] || 0) + elapsed_time
+      average_elapsed_time = total_elapsed_time / frequency
+
+      console "#{identifier}\t#{niceposition(position)} " \
+            "(" \
+            "elapsed time: #{nicefloat(elapsed_time)}s, " \
+            "rate: #{niceposition(rate(elapsed_time))}/#{@rate_unit}, " \
+            "average: #{nicefloat(average_elapsed_time)}s, " \
+            "max: #{nicefloat(max_elapsed_time)}s, " \
+            "#{eta(position, elapsed_time)})"
 
       state.previous_position = position
       state.previous_time = current_time
     end
 
     def current_position
-      percent? ? 100 * counter / expected : counter
+      percent? ? 100.0 * counter / expected : counter
     end
 
     def percent?
@@ -101,6 +112,13 @@ module BatchManager
       remaining_time = elapsed_time * remaining_percent
       eta = Time.current + remaining_time.seconds
       ", ETA #{eta.to_s(:time)}"
+    end
+
+    def identifier
+      @identifier ||= begin
+        worker_number = defined?(Parallel) && Parallel.worker_number ? "Worker #{sprintf('%3d', Parallel.worker_number)}" : nil
+        [worker_number, name].compact.join(": ")
+      end
     end
   end
 end
