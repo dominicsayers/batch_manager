@@ -81,8 +81,8 @@ module BatchManager
     end
 
     def announce_finish_rate
-      job.tee "#{progress.nicenumber(counter)} #{name} records processed " \
-        "in #{progress.nicefloat(elapsed_time)} seconds"
+      job.tee "#{progress.nice_number(counter)} #{name} records processed " \
+        "in #{progress.nice_float(elapsed_time)} seconds"
     end
   end
 end
